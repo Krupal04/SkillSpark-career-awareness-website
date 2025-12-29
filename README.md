@@ -46,7 +46,7 @@ SkillSpark-Website/
 ---
 
 ## Author
-**Tanishka Jadhav**  
+**Krupal Chaudhari**  
 Computer Engineering Student | Aspiring Google Employee  
 
 ---
