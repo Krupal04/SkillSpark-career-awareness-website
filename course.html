@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Details • SkillsSpark</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  font-family:'Poppins',sans-serif;
+  background:#f8f9fa;
+}
+.card{
+  border:none;
+  border-radius:16px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.1);
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-light bg-white shadow-sm mb-4">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html">SkillsSpark</a>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<main class="container mb-5">
+  <div id="courseContent" class="card p-4"></div>
+</main>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const courseName = decodeURIComponent(params.get('course') || '');
+
+const data = {
+
+  "Web Development":{
+    desc:"Web Development focuses on designing and building responsive, user-friendly websites and web applications used in modern industries.",
+    duration:"6 Weeks",
+    level:"Beginner to Intermediate",
+    careers:["Frontend Developer","Full Stack Developer","UI Developer"],
+    skills:[
+      "HTML5 – Website structure",
+      "CSS3 – Styling & layouts",
+      "JavaScript – Interactivity",
+      "Bootstrap – Responsive design",
+      "React – Modern UI development"
+    ],
+    syllabus:[
+      "HTML tags, forms & tables",
+      "CSS Flexbox & Grid",
+      "JavaScript & DOM",
+      "Responsive website project",
+      "Introduction to React"
+    ],
+    resources:[
+      {name:"HTML & CSS",link:"https://www.w3schools.com/html/"},
+      {name:"JavaScript",link:"https://developer.mozilla.org/en-US/docs/Web/JavaScript"},
+      {name:"React Docs",link:"https://react.dev/learn"}
+    ]
+  },
+
+  "Python Programming":{
+    desc:"Python is a beginner-friendly programming language widely used in software development, automation, data science and AI.",
+    duration:"5 Weeks",
+    level:"Beginner",
+    careers:["Python Developer","Backend Developer","Data Analyst"],
+    skills:[
+      "Python syntax & logic",
+      "Functions & modules",
+      "File handling",
+      "APIs & Flask basics",
+      "Problem solving"
+    ],
+    syllabus:[
+      "Variables & data types",
+      "Loops & conditions",
+      "Functions & files",
+      "Intro to Flask",
+      "Mini Python project"
+    ],
+    resources:[
+      {name:"Python Tutorial",link:"https://www.w3schools.com/python/"},
+      {name:"Flask",link:"https://flask.palletsprojects.com/"}
+    ]
+  },
+
+  "AI & Machine Learning":{
+    desc:"AI & Machine Learning teaches computers to learn from data and make intelligent decisions used in modern technologies.",
+    duration:"8 Weeks",
+    level:"Intermediate",
+    careers:["AI Engineer","ML Engineer","Data Scientist"],
+    skills:[
+      "Python for AI",
+      "Data preprocessing",
+      "Machine learning models",
+      "Model evaluation",
+      "Basic deep learning"
+    ],
+    syllabus:[
+      "Introduction to AI & ML",
+      "Supervised learning",
+      "Unsupervised learning",
+      "Model training & testing",
+      "Mini ML project"
+    ],
+    resources:[
+      {name:"Machine Learning",link:"https://www.coursera.org/learn/machine-learning"},
+      {name:"TensorFlow",link:"https://www.tensorflow.org/tutorials"}
+    ]
+  },
+
+  "Graphic Design":{
+    desc:"Graphic Design focuses on visual communication using images, typography, and creativity to build strong brand identity.",
+    duration:"4 Weeks",
+    level:"Beginner",
+    careers:["Graphic Designer","UI Designer","Creative Artist"],
+    skills:[
+      "Design principles",
+      "Color theory",
+      "Typography",
+      "Adobe tools",
+      "Creative thinking"
+    ],
+    syllabus:[
+      "Design fundamentals",
+      "Photoshop basics",
+      "Illustrator basics",
+      "Logo & poster design",
+      "Mini design project"
+    ],
+    resources:[
+      {name:"Photoshop",link:"https://helpx.adobe.com/photoshop/tutorials.html"},
+      {name:"Figma",link:"https://help.figma.com/"}
+    ]
+  }
+
+};
+
+const content = document.getElementById("courseContent");
+
+if(!courseName || !data[courseName]){
+  content.innerHTML = `
+    <h4>Course not found</h4>
+    <a href="index.html">Go back to Home</a>
+  `;
+}else{
+  const c = data[courseName];
+
+  content.innerHTML = `
+    <h3 class="fw-bold mb-2">${courseName}</h3>
+    <p class="text-muted">${c.desc}</p>
+
+    <p><strong>Duration:</strong> ${c.duration}</p>
+    <p><strong>Level:</strong> ${c.level}</p>
+    <p><strong>Career Opportunities:</strong> ${c.careers.join(", ")}</p>
+
+    <h5 class="mt-3">Skills You Will Learn</h5>
+    <ul>${c.skills.map(s=>`<li>${s}</li>`).join("")}</ul>
+
+    <h5 class="mt-3">Course Syllabus</h5>
+    <ul>${c.syllabus.map(s=>`<li>${s}</li>`).join("")}</ul>
+
+    <h5 class="mt-3">Learning Resources</h5>
+    <ul>${c.resources.map(r=>`<li><a target="_blank" href="${r.link}">${r.name}</a></li>`).join("")}</ul>
+
+    <button id="enrollBtn" class="btn btn-success mt-3">Enroll Now</button>
+  `;
+
+  document.getElementById("enrollBtn").addEventListener("click",()=>{
+    const email = localStorage.getItem("ss_current");
+    if(!email){
+      alert("Please login first!");
+      location.href="login.html";
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem("ss_users"));
+    const user = users[email];
+
+    if(!user.courses.includes(courseName)){
+      user.courses.push(courseName);
+      user.progress = Math.min(100,(user.progress||0)+20);
+      localStorage.setItem("ss_users",JSON.stringify(users));
+    }
+
+    alert("Enrolled successfully!");
+    location.href="profile.html";
+  });
+}
+</script>
+
+</body>
+</html>
